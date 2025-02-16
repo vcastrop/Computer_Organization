@@ -3,7 +3,10 @@ CHIP Or {
     OUT out;
 
     PARTS:
+    //Not(a)
     Nand(a=a, b=a, out=nota);
+    //Not(b)
     Nand(a=b, b=b, out=notb);
+    //Or(a,b)
     Nand(a=nota, b=notb, out=out);
 }
