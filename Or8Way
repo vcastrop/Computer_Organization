@@ -1,0 +1,39 @@
+CHIP Or8Way {
+    IN in[8];
+    OUT out;
+
+    PARTS:
+    //first Or in nand
+    //Not(in)
+    Nand(a=in[0], b=in[0], out=nota);
+    Nand(a=in[1], b=in[1], out=notb);
+    Nand(a=in[2], b=in[2], out=notc);
+    Nand(a=in[3], b=in[3], out=notd);
+    Nand(a=in[4], b=in[4], out=note);
+    Nand(a=in[5], b=in[5], out=notf);
+    Nand(a=in[6], b=in[6], out=notg);
+    Nand(a=in[7], b=in[7], out=noth);
+    //Or(a,b)
+    Nand(a=nota, b=notb, out=aOrb);
+    Nand(a=notc, b=notd, out=cOrd);
+    Nand(a=note, b=notf, out=eOrf);
+    Nand(a=notg, b=noth, out=gOrh);
+
+    //second Or
+    //Not(in)
+    Nand(a=aOrb, b=aOrb, out=notaorb);
+    Nand(a=cOrd, b=cOrd, out=notcord);
+    Nand(a=eOrf, b=eOrf, out=noteorf);
+    Nand(a=gOrh, b=gOrh, out=notgorh);
+    //Or(Or(a,b),Or(c,d))
+    Nand(a=notaorb, b=notcord, out=abOrcd);
+    Nand(a=noteorf, b=notgorh, out=efOrgh);
+
+    //output Or
+    //Not(in)
+    Nand(a=abOrcd, b=abOrcd, out=notabOrcd);
+    Nand(a=efOrgh, b=efOrgh, out=notefOrgh);
+    //Or(Or(Or(a,b),Or(c,d)), Or(Or(e,f),Or(g,h)))
+    Nand(a=notabOrcd, b=notefOrgh, out=out);
+
+}
