@@ -1,34 +1,24 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/1/Mux4Way16.hdl
-/**
- * 4-way 16-bit multiplexor:
- * out = a if sel = 00
- *       b if sel = 01
- *       c if sel = 10
- *       d if sel = 11
- */
 CHIP Mux4Way16 {
     IN a[16], b[16], c[16], d[16], sel[2];
     OUT out[16];
 
     PARTS:
-    //nand for Not(sel[0]) and Not(sel[1])
+    //notsel[0] and notsel[1]
     Nand(a=sel[0], b=sel[0], out=notsel0);
     Nand(a=sel[1], b=sel[1], out=notsel1);
 
-    //FIRST STAGE>> 2 2way muxes
-    //nand for (a, notsel[0]) // (aAndnotsel)
-    //nand for (b, sel[0]) //(bAndsel)
-    //nand for (c, notsel[0]) // (cAndnotsel)
-    //nand for (d, sel[0]) // (dAndsel)
+    //Mux1
+    Nand16(a=a, b=notsel0, out=outas);
+    Nand16(a=b, b=sel[0], out=outbs);
+    Nand16(a=outas, b=outbs, out=Mux1);
+    //Mux2
+    Nand16(a=c, b=notsel0, out=outcs);
+    Nand16(a=d, b=sel[0], out=outds);
+    Nand16(a=outcs, b=outds, out=Mux2);
+    //Mux3
+    Nand16(a=Mux1, b=notsel1, out=outMux1);
+    Nand16(a=Mux2, b=sel[1], out=outMux2);
+    Nand16(a=outMux1, b=outMux2, out=out);
 
-    //nand for ((aAndnotsel), (bAndsel)) // aMuxb
-    //nand for ((cAndnotsel), (dAndsel)) // cMuxd
 
-    //nand for (r5, notsel[1]) //
-
-    //nand for Or(And(a, notsel), And(b, sel)) FINAL OUTPUT
-    Nand(a=aNandnotsel, b=selNandb, out=out);
 }
